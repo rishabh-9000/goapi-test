@@ -1,4 +1,4 @@
 package constants
 
 // MongoURI : MongoDB URI link
-var MongoURI string = "example"
+var MongoURI string = "mongodb://localhost:27017"

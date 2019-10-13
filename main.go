@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"social-api/apis/user"
+	"social-api/apis"
 	"social-api/config"
 
 	"github.com/gorilla/mux"
@@ -18,7 +18,7 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", Test).Methods("GET")
-	router.HandleFunc("/person", user.CreatePersonEndpoint).Methods("POST")
+	router.HandleFunc("/person", apis.CreatePersonEndpoint).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":5000", router))
 }

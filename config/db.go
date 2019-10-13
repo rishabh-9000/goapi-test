@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"log"
+	"social-api/constants"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,7 +16,7 @@ var Client *mongo.Client
 // DbConnect : Connecting MongoDB
 func DbConnect() {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI(constants.MongoURI)
 	Client, _ = mongo.Connect(ctx, clientOptions)
 	if Client != nil {
 		log.Println("DB Connected")

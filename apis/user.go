@@ -1,4 +1,4 @@
-package user
+package apis
 
 import (
 	"context"
