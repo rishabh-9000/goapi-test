@@ -9,18 +9,26 @@ import (
 	"time"
 )
 
-// PersonEndpoint : Create a new Person
-func PersonEndpoint(w http.ResponseWriter, r *http.Request) {
+// UserEndpoint : Create a new User
+func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
-	var person models.User
+	var user models.User
 
-	_ = json.NewDecoder(r.Body).Decode(&person)
-	collection := config.Client.Database("GoTest").Collection("people")
+	_ = json.NewDecoder(r.Body).Decode(&user)
+	collection := config.Client.Database("test").Collection("user")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
-	if r.Method == http.MethodGet {
-		result, _ := collection.InsertOne(ctx, person)
-		json.NewEncoder(w).Encode(result)
+	if r.Method == http.MethodPost {
+		// Validation
+
+		// See if user exists
+
+		// Encrypt Password
+
+		// Return JWT
+
+		// result, _ := collection.InsertOne(ctx, user)
+		// json.NewEncoder(w).Encode(result)
 	}
 }
