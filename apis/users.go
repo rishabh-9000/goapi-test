@@ -7,6 +7,8 @@ import (
 	"social-api/config"
 	"social-api/models"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 // UserEndpoint : Create a new User
@@ -21,7 +23,23 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		// Validation
+		valid := true
+		vars := mux.Vars(r)
 
+		name := vars["name"]
+		if name == "" || len(name) > 252 {
+			valid = false
+		}
+
+		email := vars["email"]
+		if email == "" || (!string.Contains(email, "@")) {
+			valid = false
+		}
+
+		password := vars["password"]
+		if password == "" {
+			valid = false
+		}
 		// See if user exists
 
 		// Encrypt Password

@@ -27,20 +27,20 @@ func main() {
 		"/api/users",
 		apis.UserEndpoint).Methods("GET", "POST")
 
-	// Authentication Route
-	router.HandleFunc(
-		"/api/auth",
-		apis.CreatePersonEndpoint).Methods("POST")
+	// // Authentication Route
+	// router.HandleFunc(
+	// 	"/api/auth",
+	// 	apis.CreatePersonEndpoint).Methods("POST")
 
-	// Profile Route
-	router.HandleFunc(
-		"/api/profile",
-		apis.CreatePersonEndpoint).Methods("POST")
+	// // Profile Route
+	// router.HandleFunc(
+	// 	"/api/profile",
+	// 	apis.CreatePersonEndpoint).Methods("POST")
 
-	// Posts Route
-	router.HandleFunc(
-		"/api/posts",
-		apis.CreatePersonEndpoint).Methods("POST")
+	// // Posts Route
+	// router.HandleFunc(
+	// 	"/api/posts",
+	// 	apis.CreatePersonEndpoint).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":5000", router))
 }
