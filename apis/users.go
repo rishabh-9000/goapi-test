@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"social-api/config"
 	"social-api/models"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -32,7 +33,7 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 		}
 
 		email := vars["email"]
-		if email == "" || (!string.Contains(email, "@")) {
+		if email == "" || (!strings.Contains(email, "@")) {
 			valid = false
 		}
 
@@ -40,6 +41,7 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 		if password == "" {
 			valid = false
 		}
+
 		// See if user exists
 
 		// Encrypt Password
