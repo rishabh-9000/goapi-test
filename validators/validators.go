@@ -6,10 +6,10 @@ import (
 
 // IsEmpty : Check if string is empty
 func IsEmpty(s string) bool {
-	if s == "" {
-		return true
+	if s != "" {
+		return false
 	}
-	return false
+	return true
 }
 
 // IsChar : Check if string only constains characters

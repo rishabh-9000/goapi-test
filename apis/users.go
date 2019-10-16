@@ -9,6 +9,8 @@ import (
 	"social-api/models"
 	"social-api/validators"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // UserEndpoint : Create a new User
@@ -27,7 +29,7 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 
 		// Validation
 		name := user.Name
-		if !validators.IsEmpty(name) {
+		if validators.IsEmpty(name) {
 			err.Message = "Name is Empty."
 			errors = append(errors, err)
 		}
@@ -43,9 +45,15 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 		}
 
 		password := user.Password
-		if !validators.IsEmpty(password) {
+		if validators.IsEmpty(password) {
 			err.Message = "Password cannot be empty."
 			errors = append(errors, err)
+		} else {
+			hash, e := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
+			if e != nil {
+				log.Fatal(e)
+			}
+			user.Password = string([]byte(hash))
 		}
 
 		// See if user exists
@@ -53,8 +61,9 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 		// Encrypt Password
 
 		// Return JWT
-		log.Println(user)
-		if len(errors) != 0 {
+
+		if len(errors) == 0 {
+			user.Date = time.Now()
 			result, e := collection.InsertOne(ctx, user)
 			if e != nil {
 				log.Fatal(e)
@@ -62,8 +71,7 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 			}
 			json.NewEncoder(w).Encode(result)
 		} else {
-			result := "Internal Server Error"
-			json.NewEncoder(w).Encode(result)
+			json.NewEncoder(w).Encode(errors)
 		}
 	}
 }
