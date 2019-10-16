@@ -5,25 +5,27 @@ import (
 )
 
 // IsEmpty : Check if string is empty
-func IsEmpty(s string) (bool, string) {
-	re := regexp.MustCompile(`\.+`)
-	return re.Match([]byte(s)), "Input Empty if True."
+func IsEmpty(s string) bool {
+	if s == "" {
+		return true
+	}
+	return false
 }
 
 // IsChar : Check if string only constains characters
-func IsChar(s string) (bool, string) {
+func IsChar(s string) bool {
 	re := regexp.MustCompile(`[a-zA-Z]`)
-	return re.Match([]byte(s)), "Input is not just characters."
+	return re.Match([]byte(s))
 }
 
 // IsNumeric : Check if string only contains numbers
-func IsNumeric(s string) (bool, string) {
+func IsNumeric(s string) bool {
 	re := regexp.MustCompile(`[0-9]`)
-	return re.Match([]byte(s)), "Input is not just numeric."
+	return re.Match([]byte(s))
 }
 
 // IsEmail : Check if string is email
-func IsEmail(s string) (bool, string) {
+func IsEmail(s string) bool {
 	re := regexp.MustCompile(`[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+`)
-	return re.Match([]byte(s)), "Input is not an email."
+	return re.Match([]byte(s))
 }
