@@ -14,8 +14,11 @@ func IsEmpty(s string) bool {
 
 // IsChar : Check if string only constains characters
 func IsChar(s string) bool {
-	re := regexp.MustCompile(`[a-zA-Z]`)
-	return re.Match([]byte(s))
+	if s != "" {
+		re := regexp.MustCompile(`[a-zA-Z]`)
+		return re.Match([]byte(s))
+	}
+	return true
 }
 
 // IsNumeric : Check if string only contains numbers

@@ -10,6 +10,7 @@ import (
 	"social-api/validators"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -44,6 +45,14 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 			errors = append(errors, err)
 		}
 
+		// See if user exists
+		userExists := collection.FindOne(ctx, bson.M{"email": email})
+		if userExists.Err() == nil {
+			err.Message = "User already exists."
+			errors = append(errors, err)
+		}
+
+		// Encrypt Password
 		password := user.Password
 		if validators.IsEmpty(password) {
 			err.Message = "Password cannot be empty."
@@ -55,11 +64,6 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 			}
 			user.Password = string([]byte(hash))
 		}
-
-		// See if user exists
-
-		// Encrypt Password
-
 		// Return JWT
 
 		if len(errors) == 0 {
