@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"social-api/config"
 	"social-api/models"
-	"strings"
+	"social-api/validators"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -28,19 +28,8 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 
 		name := vars["name"]
-		if name == "" || len(name) > 252 {
-			valid = false
-		}
 
-		email := vars["email"]
-		if email == "" || (!strings.Contains(email, "@")) {
-			valid = false
-		}
-
-		password := vars["password"]
-		if password == "" {
-			valid = false
-		}
+		valid = validators.IsEmpty(name) && validators.IsChar(name)
 
 		// See if user exists
 
