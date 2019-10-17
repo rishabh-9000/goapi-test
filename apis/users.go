@@ -133,18 +133,17 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(errors) == 0 {
-		jwtToken, e := helper.GenerateJWT(existingUser.Email)
-		if e != nil {
-			log.Println("Something Went Wrong: ", e.Error())
-			return
-		}
-		token.Token = jwtToken
-		json.NewEncoder(w).Encode(token)
-		return
-	} else {
+	if len(errors) != 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(errors)
 		return
 	}
+
+	jwtToken, e := helper.GenerateJWT(existingUser.Email)
+	if e != nil {
+		log.Println("Something Went Wrong: ", e.Error())
+		return
+	}
+	token.Token = jwtToken
+	json.NewEncoder(w).Encode(token)
 }
