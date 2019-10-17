@@ -20,17 +20,17 @@ func main() {
 	// Test Route
 	router.HandleFunc(
 		"/",
-		Test).Methods("GET", "POST")
+		Test).Methods("GET")
 
 	// Users Route
 	router.HandleFunc(
 		"/api/users",
 		apis.UserEndpoint).Methods("GET", "POST")
 
-	// // Authentication Route
-	// router.HandleFunc(
-	// 	"/api/auth",
-	// 	apis.CreatePersonEndpoint).Methods("POST")
+	// Login Route
+	router.HandleFunc(
+		"/api/login",
+		apis.UserLogin).Methods("POST")
 
 	// // Profile Route
 	// router.HandleFunc(

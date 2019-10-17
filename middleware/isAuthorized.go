@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"social-api/constants"
@@ -11,15 +12,15 @@ import (
 // IsAuthorized : Authorized route middleware
 func IsAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header["Token"] != nil {
-			token, e := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
-				if _, ok := token.Method.(jwt.SigningMethodHMAC); !ok {
-					return nil, log.Println("There was an error")
+		if r.Header["x-auth-token"] != nil {
+			token, e := jwt.Parse(r.Header["x-auth-token"][0], func(token *jwt.Token) (interface{}, error) {
+				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+					return nil, fmt.Errorf("There was an error")
 				}
 				return constants.JWTKey, nil
 			})
 
-			if err != nil {
+			if e != nil {
 				log.Println(w, e.Error())
 			}
 

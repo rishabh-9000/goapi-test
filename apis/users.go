@@ -18,6 +18,7 @@ import (
 // UserEndpoint : Create a new User
 func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
+
 	collection := config.Client.Database("test").Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -86,5 +87,64 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(errors)
 		}
+	}
+}
+
+// UserLogin : Loging in user
+func UserLogin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	collection := config.Client.Database("test").Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var user models.User
+	var existingUser models.User
+	var token models.JWT
+	var err models.Err
+	var errors []models.Err
+
+	_ = json.NewDecoder(r.Body).Decode(&user)
+
+	// Validation
+	email := user.Email
+	if !validators.IsEmail(email) {
+		err.Message = "Invalid Email."
+		errors = append(errors, err)
+	}
+
+	e := collection.FindOne(ctx, bson.D{{"email", email}}).Decode(&existingUser)
+	if e != nil {
+		err.Message = "Invalid Credentials"
+		errors = append(errors, err)
+		json.NewEncoder(w).Encode(errors)
+		return
+	}
+
+	hashedPassword := existingUser.Password
+	password := []byte(user.Password)
+	byteHash := []byte(hashedPassword)
+
+	passwordMatch := bcrypt.CompareHashAndPassword(byteHash, password)
+	if passwordMatch != nil {
+		err.Message = "Invalid Credentials"
+		errors = append(errors, err)
+		json.NewEncoder(w).Encode(errors)
+		return
+	}
+
+	if len(errors) == 0 {
+		jwtToken, e := helper.GenerateJWT(existingUser.Email)
+		if e != nil {
+			log.Println("Something Went Wrong: ", e.Error())
+			return
+		}
+		token.Token = jwtToken
+		json.NewEncoder(w).Encode(token)
+		return
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(errors)
+		return
 	}
 }

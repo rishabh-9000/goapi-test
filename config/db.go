@@ -15,7 +15,8 @@ var Client *mongo.Client
 
 // DbConnect : Connecting MongoDB
 func DbConnect() {
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	clientOptions := options.Client().ApplyURI(constants.MongoURI)
 	Client, _ = mongo.Connect(ctx, clientOptions)
 	if Client != nil {

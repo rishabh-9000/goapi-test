@@ -3,7 +3,6 @@ package helper
 import (
 	"log"
 	"social-api/constants"
-	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
@@ -14,9 +13,7 @@ func GenerateJWT(email string) (string, error) {
 
 	claims := token.Claims.(jwt.MapClaims)
 
-	claims["authorized"] = true
 	claims["email"] = email
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
 
 	tokenString, e := token.SignedString(constants.JWTKey)
 	if e != nil {
