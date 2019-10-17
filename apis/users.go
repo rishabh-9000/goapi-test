@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"social-api/config"
+	"social-api/helper"
 	"social-api/models"
 	"social-api/validators"
 	"time"
@@ -17,12 +18,13 @@ import (
 // UserEndpoint : Create a new User
 func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
-	collection := config.Client.Database("test").Collection("user")
+	collection := config.Client.Database("test").Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if r.Method == http.MethodPost {
 		var user models.User
+		var token models.JWT
 		var err models.Err
 		var errors []models.Err
 
@@ -64,17 +66,24 @@ func UserEndpoint(w http.ResponseWriter, r *http.Request) {
 			}
 			user.Password = string([]byte(hash))
 		}
-		// Return JWT
 
 		if len(errors) == 0 {
 			user.Date = time.Now()
-			result, e := collection.InsertOne(ctx, user)
+			_, e := collection.InsertOne(ctx, user)
 			if e != nil {
-				log.Fatal(e)
-				json.NewEncoder(w).Encode(e)
+				w.WriteHeader(http.StatusInternalServerError)
+				return
 			}
-			json.NewEncoder(w).Encode(result)
+
+			jwtToken, e := helper.GenerateJWT(user.Email)
+			if e != nil {
+				log.Println("Something Went Wrong: ", e.Error())
+				return
+			}
+			token.Token = jwtToken
+			json.NewEncoder(w).Encode(token)
 		} else {
+			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(errors)
 		}
 	}
