@@ -10,10 +10,10 @@ import (
 )
 
 // IsAuthorized : Authorized route middleware
-func IsAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handler {
+func IsAuthorized(endpoint http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header["x-auth-token"] != nil {
-			token, e := jwt.Parse(r.Header["x-auth-token"][0], func(token *jwt.Token) (interface{}, error) {
+		if r.Header["X-Auth-Token"] != nil {
+			token, e := jwt.Parse(r.Header["X-Auth-Token"][0], func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, fmt.Errorf("There was an error")
 				}

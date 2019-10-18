@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"social-api/apis"
 	"social-api/config"
+	"social-api/middleware"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
-	log.Println("Starting the application...")
+	log.Println("Starting the application.")
 
 	config.DbConnect()
 
@@ -32,10 +33,10 @@ func main() {
 		"/api/login",
 		apis.UserLogin).Methods("POST")
 
-	// // Profile Route
-	// router.HandleFunc(
-	// 	"/api/profile",
-	// 	apis.CreatePersonEndpoint).Methods("POST")
+	// Profile Route
+	router.HandleFunc(
+		"/api/profile",
+		middleware.IsAuthorized(apis.ProtectedRoute)).Methods("POST")
 
 	// // Posts Route
 	// router.HandleFunc(

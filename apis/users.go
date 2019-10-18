@@ -3,16 +3,19 @@ package apis
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"social-api/config"
 	"social-api/helper"
 	"social-api/models"
 	"social-api/validators"
+	"social-api/constants"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 // UserEndpoint : Create a new User
@@ -146,4 +149,27 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	token.Token = jwtToken
 	json.NewEncoder(w).Encode(token)
+}
+
+// ProtectedRoute : Test
+func ProtectedRoute(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	var user models.User
+	fmt.Println("Headers2: ", r.Header)
+	tokenString := r.Header["X-Auth-Token"][0]
+	claims := jwt.MapClaims{}
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return constants.JWTKey, nil
+	})
+	if err != nil {
+		log.Println("Error HUA!")
+	}
+	log.Println("TOKEN YAHAN HAI: ", token)
+	// ... error handling
+
+	// do something with decoded claims
+	for key, val := range claims {
+		fmt.Printf("Key: %v, value: %v\n", key, val)
+	}
+	json.NewEncoder(w).Encode(user)
 }
