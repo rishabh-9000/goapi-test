@@ -7,15 +7,15 @@ import (
 	"log"
 	"net/http"
 	"social-api/config"
+	"social-api/constants"
 	"social-api/helper"
 	"social-api/models"
 	"social-api/validators"
-	"social-api/constants"
 	"time"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
-	jwt "github.com/dgrijalva/jwt-go"
 )
 
 // UserEndpoint : Create a new User

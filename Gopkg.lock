@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
   name = "github.com/go-stack/stack"
   packages = ["."]
   revision = "2fee6af1a9795aafbe0253a0cfbdf668e1fb8a9a"
@@ -18,12 +24,6 @@
   packages = ["."]
   revision = "00bdffe0f3c77e27d2cf6f5c70232a2d3e4d9c15"
   version = "v1.7.3"
-
-[[projects]]
-  name = "github.com/mongodb/mongo-go-driver"
-  packages = ["bson/primitive"]
-  revision = "e1f3d104525e687eda76125707c9852e429f2730"
-  version = "v0.3.0"
 
 [[projects]]
   branch = "master"
@@ -46,7 +46,7 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["pbkdf2"]
+  packages = ["bcrypt","blowfish","pbkdf2"]
   revision = "87dc89f01550277dc22b74ffcf4cd89fa2f40f4c"
 
 [[projects]]
@@ -64,6 +64,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7f25dd593cd50502f23d5562c7c2c0dbe08dc77e236aca401ed63fc700492d95"
+  inputs-digest = "bb0e2dfddd6415da3b7e5461cf0536367439e1e134300b1307e1ac152f0b3a07"
   solver-name = "gps-cdcl"
   solver-version = 1
